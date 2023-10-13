@@ -8,7 +8,11 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "^5.0.1",
+    "react-three-fiber": "^6.0.13",
+    "three": "^0.157.0",
+    "three-bmfont-text": "^3.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

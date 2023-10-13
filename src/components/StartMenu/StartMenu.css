@@ -1,0 +1,52 @@
+.start-menu {
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .start-menu h2 {
+    font-size: 24px;
+  }
+  
+  .start-menu img {
+    max-width: 100%;
+    margin: 20px 0;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .start-button,
+  .menu-button,
+  .instruction-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  
+  .menu-button {
+    background-color: #ffc107;
+  }
+  
+  .instruction-button {
+    background-color: #dc3545;
+  }
+  
+  .button-container .menu-button:hover {
+    background-color: #ffc107a0;
+  }
+  
+  .button-container .exit-button:hover {
+    background-color: #dc3545a0;
+  }  

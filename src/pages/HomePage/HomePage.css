@@ -1,0 +1,26 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* This sets the container to take the full viewport height */
+    background-color: #f0f0f0;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  /* Style the link if needed */
+  a {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  a:hover {
+    background-color: #0056b3;
+  }
+  
