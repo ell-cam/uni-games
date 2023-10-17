@@ -32,6 +32,11 @@
   padding: 10px;
   margin: 10px 0;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.answer-option:hover {
+  background-color: #f0f0f0;
 }
 
 .answer-option.correct {
@@ -42,4 +47,10 @@
 .answer-option.incorrect {
   background-color: red;
   color: white;
+}
+
+.category-info {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

@@ -4,32 +4,26 @@ import "./TriviaBox.css";
 const TriviaBox = ({ category }) => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(10);
   const [gameStarted, setGameStarted] = useState(false);
   const [sessionToken, setSessionToken] = useState(null);
   const [usedQuestions, setUsedQuestions] = useState([]);
   const [answerIsCorrect, setAnswerIsCorrect] = useState(null);
-  const [showGoText, setShowGoText] = useState(false);
-  const [showQuestion, setShowQuestion] = useState(true);
+  const [countdown, setCountdown] = useState(15);
+  const [answerClicked, setAnswerClicked] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
 
-  useEffect(() => {
-    fetchSessionToken();
-  }, []);
 
+  // Fetch a new question when game starts and when the current question is answered
   useEffect(() => {
-    if (gameStarted && !currentQuestion) {
+    if (
+      gameStarted &&
+      (currentQuestion === null)
+    ) {
       fetchNewQuestion();
     }
-  }, [gameStarted]);
+  }, [gameStarted, currentQuestion, answerIsCorrect]);
 
   useEffect(() => {
-    if (timeLeft === 0 && gameStarted) {
-      setShowGoText(true);
-      setShowQuestion(false);
-    }
-  }, [timeLeft, gameStarted]);
-
-  const fetchSessionToken = () => {
     fetch("https://opentdb.com/api_token.php?command=request")
       .then((response) => response.json())
       .then((data) => {
@@ -38,10 +32,44 @@ const TriviaBox = ({ category }) => {
       .catch((error) => {
         console.error("Error fetching session token:", error);
       });
-  };
+  }, []);
 
   const handleBeginClick = () => {
     setGameStarted(true);
+  };
+
+  const startCountdown = () => {
+    const intervalId = setInterval(() => {
+      if (countdown > 0 && !answerClicked) {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      } else {
+        clearInterval(intervalId);
+        // Timer reached 0 or an answer was clicked
+      }
+    }, 1000);
+  
+    return intervalId;
+  };
+
+  useEffect(() => {
+    if (gameStarted && !isGameOver) {
+      const intervalId = startCountdown();
+  
+      // Clean up the interval when the game ends or an answer is clicked
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [gameStarted, isGameOver, answerClicked]);
+  
+
+  const formatTimer = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedTime = `${minutes}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
+    return formattedTime;
   };
 
   const handleOptionClick = (option) => {
@@ -49,31 +77,30 @@ const TriviaBox = ({ category }) => {
       // User has already answered, don't process further clicks
       return;
     }
-
-    clearTimeout(timeLeft);
-
+  
+    setAnswerClicked(true); // Stop the timer
+    setSelectedOption(option);
+  
     if (option === currentQuestion.correct_answer) {
       // User answered correctly
       setAnswerIsCorrect(true);
+      console.log("Correct!");
     } else {
       // User answered incorrectly
       setAnswerIsCorrect(false);
+      console.log("Wrong!");
     }
-
-    setShowGoText(true);
-    setShowQuestion(false);
-  };
+  };  
 
   const fetchNewQuestion = () => {
     setSelectedOption(null);
     setAnswerIsCorrect(null);
-
     // Fetch questions from the API URL
     let apiURL = "https://opentdb.com/api.php?amount=1";
 
     const categoryMapping = {
-      "General Knowledge": 9,
-      Entertainment: [10, 11, 12, 13, 14, 15, 16, 26],
+      General: 9,
+      Theatre: [10, 11, 12, 13, 14, 15, 16, 26],
       Science: [17, 18, 19, 27],
       Sports: 21,
       Geography: 22,
@@ -84,20 +111,14 @@ const TriviaBox = ({ category }) => {
 
     switch (category) {
       default:
-      case "General Knowledge":
-        selectedCategory = categoryMapping["General Knowledge"];
+      case "General":
+        selectedCategory = categoryMapping["General"];
         break;
-      case "Entertainment":
-        selectedCategory =
-          categoryMapping["Entertainment"][
-            Math.floor(Math.random() * categoryMapping["Entertainment"].length)
-          ];
+      case "Theatre":
+        selectedCategory = categoryMapping["Theatre"];
         break;
       case "Science":
-        selectedCategory =
-          categoryMapping["Science"][
-            Math.floor(Math.random() * categoryMapping["Science"].length)
-          ];
+        selectedCategory = categoryMapping["Science"];
         break;
       case "Sports":
         selectedCategory = categoryMapping["Sports"];
@@ -110,7 +131,6 @@ const TriviaBox = ({ category }) => {
         break;
     }
 
-    apiURL += `&category=${selectedCategory}`;
     apiURL += "&type=multiple";
 
     if (sessionToken) {
@@ -160,51 +180,43 @@ const TriviaBox = ({ category }) => {
     <div className="trivia-container">
       {gameStarted ? (
         <div className="trivia-box">
-          <div className="timer">Time Left: {timeLeft} seconds</div>
+          <div className="timer">Time: {countdown} seconds</div>
           {currentQuestion ? (
             <>
               <div className="question">{currentQuestion.question}</div>
               <div className="answer-options">
-                {currentQuestion.options ? (
-                  currentQuestion.options.map((option, index) => (
-                    <div
-                      key={index}
-                      className={`answer-option ${
-                        selectedOption === option
-                          ? option === currentQuestion.correct_answer
-                            ? answerIsCorrect
-                              ? "correct"
-                              : "incorrect"
-                            : ""
-                          : ""
-                      }`}
-                      onClick={() => handleOptionClick(option)}
-                    >
-                      {option}
-                    </div>
+              {currentQuestion.options ? (
+                currentQuestion.options.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`answer-option ${
+                      selectedOption === option
+                        ? option === currentQuestion.correct_answer
+                          ? "correct"
+                          : "incorrect"
+                        : ""
+                    }`}
+                    onClick={() => handleOptionClick(option)}
+                  >
+                    {option}
+                  </div>
                   ))
                 ) : (
                   <div>No options available</div>
                 )}
               </div>
-              {showGoText && (
-                <div
-                  className={`go-text ${
-                    answerIsCorrect ? "go-forward" : "go-back"
-                  }`}
-                >
-                  {answerIsCorrect ? "Go Forward" : "Go Back"}
-                </div>
-              )}
             </>
           ) : (
             <div>No question available</div>
           )}
         </div>
       ) : (
-        <button onClick={handleBeginClick} className="start-button">
-          Begin
-        </button>
+        <div>
+          <div className="category-info">Attending {category} Class</div>
+          <button onClick={handleBeginClick} className="start-button">
+            Begin
+          </button>
+        </div>
       )}
     </div>
   );
