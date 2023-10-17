@@ -1,11 +1,12 @@
 import React from 'react';
 import TriviaBox from '../components/TriviaBox/TriviaBox';
+import Timetable from '../components/Timetable/Timetable';
 
-const GamePage = () => {
+const GamePage = ({ activePlayers }) => {
   return (
     <div>
-      <h1>Game Board</h1>
-      <TriviaBox category="general" />
+      <Timetable activePlayers={activePlayers} />
+      <TriviaBox category="Sports" />
     </div>
   );
 };

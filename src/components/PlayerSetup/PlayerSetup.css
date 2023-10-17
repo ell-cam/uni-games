@@ -1,0 +1,107 @@
+/* PlayerSetup.css */
+.player-setup {
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .player-setup h2 {
+    font-size: 24px;
+    margin-bottom: 50px;
+  }
+  
+  .player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .player {
+    text-align: center;
+    margin: 10px;
+    transition: all 0.3s;
+  }
+  
+  .player img {
+    max-width: 100px;
+    max-height: 80px;
+    margin: 10px;
+    
+  }
+  
+  .player label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .player.active {
+    transform: scale(1.1);
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    display: none;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #007bff;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #007bffa0;
+  }  

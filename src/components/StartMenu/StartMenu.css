@@ -10,11 +10,6 @@
     font-size: 24px;
   }
   
-  .start-menu img {
-    max-width: 100%;
-    margin: 20px 0;
-  }
-  
   .button-container {
     display: flex;
     justify-content: center;

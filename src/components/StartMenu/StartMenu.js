@@ -1,16 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './StartMenu.css'; // Import the CSS file
+import './StartMenu.css';
 
-const StartMenu = () => {
+const StartMenu = ({ onStartClick }) => {
   return (
     <div className="start-menu">
-      <h2>Welcome to the Game</h2>
-      <img src="your-image-url.jpg" alt="Game Logo" />
+      <h2>Race to graduate...</h2>
       <div className="button-container">
-        <Link to="/game" className="start-button">
+        <button onClick={onStartClick} className="start-button">
           Start
-        </Link>
+        </button>
         <button className="menu-button">Menu</button>
         <button className="instruction-button">Help</button>
       </div>

@@ -1,0 +1,55 @@
+/* Timetables Container */
+.timetables {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Adjust the gap between timetables as needed */
+    margin-bottom: 50px;
+    margin-top: 100px;
+  }
+  
+  /* Timetable */
+  .timetable {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    flex: 1;
+    max-width: 300px; /* Maximum width for each timetable */
+  }
+  
+  /* Timetable Divider (Vertical Line) */
+  .timetable-divider::after {
+    content: '';
+    border-right: 1px solid #ccc;
+    height: 100%;
+    margin-left: 20px; /* Adjust the margin for spacing between timetables */
+  }
+  
+  /* Timetable Header */
+  .timetable h3 {
+    margin: 0;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  /* Timetable List */
+  .timetable ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Timetable List Items */
+  .timetable li {
+    padding: 4px 0;
+    text-align: center;
+  }
+  
+  /* Additional Styles for Timetable */
+  .timetable:nth-child(odd) {
+    background-color: #e0e0e0;
+  }
+  
+  .timetable:hover {
+    background-color: #ddd;
+  }  
