@@ -12,13 +12,9 @@ const TriviaBox = ({ category }) => {
   const [answerClicked, setAnswerClicked] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
 
-
   // Fetch a new question when game starts and when the current question is answered
   useEffect(() => {
-    if (
-      gameStarted &&
-      (currentQuestion === null)
-    ) {
+    if (gameStarted && currentQuestion === null) {
       fetchNewQuestion();
     }
   }, [gameStarted, currentQuestion, answerIsCorrect]);
@@ -44,24 +40,28 @@ const TriviaBox = ({ category }) => {
         setCountdown((prevCountdown) => prevCountdown - 1);
       } else {
         clearInterval(intervalId);
-        // Timer reached 0 or an answer was clicked
+        if (countdown <= 0) {
+          // Timer reached zero, handle it here
+          setAnswerClicked(true);
+          setSelectedOption(currentQuestion.correct_answer);
+          setIsGameOver(true); // Set the game as over
+        }
       }
     }, 1000);
-  
+
     return intervalId;
   };
 
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const intervalId = startCountdown();
-  
+
       // Clean up the interval when the game ends or an answer is clicked
       return () => {
         clearInterval(intervalId);
       };
     }
   }, [gameStarted, isGameOver, answerClicked]);
-  
 
   const formatTimer = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -77,10 +77,10 @@ const TriviaBox = ({ category }) => {
       // User has already answered, don't process further clicks
       return;
     }
-  
+
     setAnswerClicked(true); // Stop the timer
     setSelectedOption(option);
-  
+
     if (option === currentQuestion.correct_answer) {
       // User answered correctly
       setAnswerIsCorrect(true);
@@ -90,7 +90,7 @@ const TriviaBox = ({ category }) => {
       setAnswerIsCorrect(false);
       console.log("Wrong!");
     }
-  };  
+  };
 
   const fetchNewQuestion = () => {
     setSelectedOption(null);
@@ -185,21 +185,23 @@ const TriviaBox = ({ category }) => {
             <>
               <div className="question">{currentQuestion.question}</div>
               <div className="answer-options">
-              {currentQuestion.options ? (
-                currentQuestion.options.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`answer-option ${
-                      selectedOption === option
-                        ? option === currentQuestion.correct_answer
+                {currentQuestion.options ? (
+                  currentQuestion.options.map((option, index) => (
+                    <div
+                      key={index}
+                      className={`answer-option ${
+                        answerIsCorrect === null
+                          ? ""
+                          : option === currentQuestion.correct_answer
                           ? "correct"
-                          : "incorrect"
-                        : ""
-                    }`}
-                    onClick={() => handleOptionClick(option)}
-                  >
-                    {option}
-                  </div>
+                          : option === selectedOption
+                          ? "incorrect"
+                          : ""
+                      }`}
+                      onClick={() => handleOptionClick(option)}
+                    >
+                      {option}
+                    </div>
                   ))
                 ) : (
                   <div>No options available</div>
