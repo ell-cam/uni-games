@@ -5,7 +5,7 @@
     justify-content: center;
     gap: 20px; /* Adjust the gap between timetables as needed */
     margin-bottom: 50px;
-    margin-top: 100px;
+    margin-top: 50px;
   }
   
   /* Timetable */
@@ -53,3 +53,12 @@
   .timetable:hover {
     background-color: #ddd;
   }  
+
+  .center-button {
+    text-align: center;
+  }
+  
+  .center-button button {
+    margin: 0 auto;
+    display: block;
+  }
