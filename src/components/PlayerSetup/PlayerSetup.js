@@ -33,6 +33,16 @@ const PlayerSetup = ({ onGameStart }) => {
     const activePlayers = players.filter((player) => player.active);
 
     if (activePlayers.length > 0) {
+      // make sure activePlayers have names
+      const activePlayersHaveNames = activePlayers.every(
+        (player) => player.name !== ""
+      );
+
+      if (!activePlayersHaveNames) {
+        alert("Please enter a name for each active player.");
+        return;
+      }
+      
       const shuffledPlayers = shuffleArray(activePlayers);
       setStartingPlayer(shuffledPlayers[0]); // Select the starting player
       onGameStart(shuffledPlayers);

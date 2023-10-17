@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TriviaBox.css";
 
-const TriviaBox = ({ category }) => {
+const TriviaBox = ({ category, recordPlayerAnswer, onClose }) => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
@@ -11,6 +11,8 @@ const TriviaBox = ({ category }) => {
   const [countdown, setCountdown] = useState(15);
   const [answerClicked, setAnswerClicked] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [hideTriviaBox, setHideTriviaBox] = useState(false);
+
 
   // Fetch a new question when game starts and when the current question is answered
   useEffect(() => {
@@ -63,15 +65,6 @@ const TriviaBox = ({ category }) => {
     }
   }, [gameStarted, isGameOver, answerClicked]);
 
-  const formatTimer = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    const formattedTime = `${minutes}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
-    return formattedTime;
-  };
-
   const handleOptionClick = (option) => {
     if (answerIsCorrect !== null) {
       // User has already answered, don't process further clicks
@@ -85,11 +78,19 @@ const TriviaBox = ({ category }) => {
       // User answered correctly
       setAnswerIsCorrect(true);
       console.log("Correct!");
+      recordPlayerAnswer(true); // Record the correct answer
     } else {
       // User answered incorrectly
       setAnswerIsCorrect(false);
       console.log("Wrong!");
+      recordPlayerAnswer(false); // Record the incorrect answer
     }
+
+    // Set a timeout to hide the TriviaBox after 3 seconds (adjust the delay as needed)
+    setTimeout(() => {
+      setHideTriviaBox(true);
+      onClose(answerIsCorrect); // Pass isAnswerCorrect to the callback
+    }, 2000);
   };
 
   const fetchNewQuestion = () => {
@@ -115,10 +116,17 @@ const TriviaBox = ({ category }) => {
         selectedCategory = categoryMapping["General"];
         break;
       case "Theatre":
-        selectedCategory = categoryMapping["Theatre"];
+        // select random index for catefory
+        const randomIndex = Math.floor(
+          Math.random() * categoryMapping["Theatre"].length
+        );
+        selectedCategory = categoryMapping["Theatre"][randomIndex];
         break;
       case "Science":
-        selectedCategory = categoryMapping["Science"];
+        const randomIndex2 = Math.floor(
+          Math.random() * categoryMapping["Science"].length
+        );
+        selectedCategory = categoryMapping["Science"][randomIndex2];
         break;
       case "Sports":
         selectedCategory = categoryMapping["Sports"];
@@ -131,6 +139,7 @@ const TriviaBox = ({ category }) => {
         break;
     }
 
+    apiURL += `&category=${selectedCategory}`;
     apiURL += "&type=multiple";
 
     if (sessionToken) {
@@ -177,6 +186,7 @@ const TriviaBox = ({ category }) => {
   };
 
   return (
+    !hideTriviaBox && (
     <div className="trivia-container">
       {gameStarted ? (
         <div className="trivia-box">
@@ -221,6 +231,7 @@ const TriviaBox = ({ category }) => {
         </div>
       )}
     </div>
+    )
   );
 };
 
